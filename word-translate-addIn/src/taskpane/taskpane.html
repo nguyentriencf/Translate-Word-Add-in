@@ -1,0 +1,52 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Contoso Task Pane Add-in</title>
+
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+
+    <!-- For more information on Fluent UI, visit https://developer.microsoft.com/fluentui#/. -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css"/>
+
+    <!-- Template styles -->
+    <link href="taskpane.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="ms-font-m ms-welcome ms-Fabric">
+   <div class="container">
+       <div class="header">
+                  <optgroup id="group"></optgroup>
+       </div>
+       <textarea id="textTranSlated" rows="10"  style="width: 100%;">
+           sdfklmsdflkjsdlfjslflksfjklsdf
+        Debugging is being started...
+        App type: desktop
+        Enabled debugging for add-in d6b5ce43-0e83-4f78-bd9d-54f63129c162.
+        Starting the dev server... (webpack serve --mode development)
+        The dev server is running on port 3000. Process id: 4488
+        Sideloading the Office Add-in...
+        Debugging started.
+        sdfklmsdflkjsdlfjslflksfjklsdf
+        Debugging is being started...
+        App type: desktop
+        Enabled debugging for add-in d6b5ce43-0e83-4f78-bd9d-54f63129c162.
+        Starting the dev server... (webpack serve --mode development)
+        The dev server is running on port 3000. Process id: 4488
+        Sideloading the Office Add-in...
+        Debugging started.
+       </textarea>
+        <div class="footer">
+            
+        </div>
+   </div>
+</body>
+
+</html>
