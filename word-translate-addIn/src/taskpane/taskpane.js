@@ -9,14 +9,13 @@
 // const translate = require("@vitalets/google-translate-api");
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
-    document.getElementById("insert").onclick = writeData;
+    document.getElementById("insert").onclick =  writeData();
     Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, async (eventArgs) => {
-      console.log(eventArgs);
-      await translate();
+      // await translates();
     });
   }
 });
-const API_KEY = "88f64a526emshd85f96f8c98bebap189861jsn5dac74a369a3";
+// const API_KEY = '9ac32b0592msh11de28e6258e1cap14cf7fjsn332299a82fc1';
 // const API_KEY = "93d67f0abamsh53f0dd7a562f07cp12fe30jsnb6ce5425e9ec";
 const select = document.getElementById("selectCountry");
 const textArea = document.getElementById("textTranSlated");
@@ -160,12 +159,16 @@ async function getSelectionText(){
 }
 async function checkSelectedText(){
   let text = await getSelectionText();
-  if(text ===''){
-    console.log('empty')
-  }else{
-    return text;
-  }
+  console.log(text);
+  // if(text ===''){
+  //   console.log('empty')
+  // }else{
+  //   console.log(text);
+  //   return text;
+  // }
 }
+
+
 
 
 async function autoDetect(textSlection){
@@ -218,6 +221,40 @@ async function translate(){
     .catch((err) => console.error(err));
 }
 
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({ pageLanguage: "en" }, "vi");
+// function googleTranslateElementInit() {
+//   new google.translate.TranslateElement({ pageLanguage: "en" }, "vi");
+// }
+
+ 
+async function translates(){
+ let text = await readData();
+ const options = {
+   method: "POST",
+   headers: {
+     "content-type": "application/json",
+     "X-RapidAPI-Host": "microsoft-translator-text.p.rapidapi.com",
+     "X-RapidAPI-Key": "9ac32b0592msh11de28e6258e1cap14cf7fjsn332299a82fc1",
+   },
+   body: '[{"Text":"hello"}]',
+ };
+
+ fetch(
+   "https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=en&api-version=3.0&profanityAction=NoAction&textType=plain",
+   options
+ )
+   .then((response) => response.json())
+   .then((response) => console.log(response))
+   .catch((err) => console.error(err));
+}
+translates();
+ 
+ function readData(){
+ Office.context.document.getSelectedDataAsync(Office.CoercionType.Text, function (asyncResult) {
+   if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+     console.log("Action failed. Error: " +  asyncResult.error.message);
+   } else {
+     return  asyncResult.value;
+   }
+ });
+
 }
