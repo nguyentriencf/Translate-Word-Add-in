@@ -32,12 +32,13 @@ body {
 
 .box select {
     border-radius: 5px;
-    margin: 15px;
-    width: 100px;
+    padding: 5px;
+    margin: 12px 12px 12px 14px;
+    width: 120px;
     background-color: #0563af;
     color: white;
     border: none;
-    font-size: 16px;
+    font-size: 14px;
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
     -webkit-appearance: button;
     appearance: button;
@@ -50,11 +51,12 @@ body {
 }
 
 button {
+    padding: 5px;
     border: none;
     margin-left: 15px;
     color: white;
     background-color: #0563af;
-    font-size: 16px;
+    font-size: 14px;
     border-radius: 5px;
 }
 

@@ -11,8 +11,8 @@ async function getHttpsOptions() {
   const httpsOptions = await devCerts.getHttpsServerOptions();
   return { cacert: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
 }
-
 module.exports = async (env, options) => {
+ 
   const dev = options.mode === "development";
   const config = {
     devtool: "source-map",

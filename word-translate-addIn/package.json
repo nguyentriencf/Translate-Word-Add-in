@@ -7,6 +7,7 @@
   },
   "license": "MIT",
   "config": {
+    "document": "https://1drv.ms/w/s!Aha8lL6LtCAB8yNTl_dLL2nIU-45?e=ZiXKVq",
     "app_to_debug": "word",
     "app_type_to_debug": "desktop",
     "dev_server_port": 3000
@@ -26,8 +27,10 @@
     "watch": "webpack --mode development --watch"
   },
   "dependencies": {
+    "@vitalets/google-translate-api": "^8.0.0",
     "core-js": "^3.9.1",
-    "regenerator-runtime": "^0.13.7"
+    "regenerator-runtime": "^0.13.7",
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
