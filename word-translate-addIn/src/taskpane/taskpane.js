@@ -9,18 +9,24 @@
 // const translate = require("@vitalets/google-translate-api");
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
-    document.getElementById("insert").onclick = checkSelectedText
+    document.getElementById("insert").onclick = insert
+    Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, async (eventArgs) => {
+      // await translate();
+    });
   }
 });
+const API_KEY = "88f64a526emshd85f96f8c98bebap189861jsn5dac74a369a3";
+// const API_KEY = "93d67f0abamsh53f0dd7a562f07cp12fe30jsnb6ce5425e9ec";
 const select = document.getElementById("selectCountry");
-export async function run() {
+const textArea = document.getElementById("textTranSlated");
+ async function insert() {
   return Word.run(async (context) => {
     /**
      * Insert your Word code here
      */
     // insert a paragraph at the end of the document.
-    const paragraph = context.document.body.insertParagraph("Hello World", Word.InsertLocation.end);
-
+    
+    const paragraph = context.document.body.insertParagraph(textArea.value, Word.InsertLocation.start);
     // change the paragraph color to blue.
     paragraph.font.color = "blue";
     await context.sync();
@@ -29,261 +35,118 @@ export async function run() {
 
 
 const countryListAlpha2 = {
-  AF: "Afghanistan",
-  AL: "Albania",
-  DZ: "Algeria",
-  AS: "American Samoa",
-  AD: "Andorra",
-  AO: "Angola",
-  AI: "Anguilla",
-  AQ: "Antarctica",
-  AG: "Antigua and Barbuda",
-  AR: "Argentina",
-  AM: "Armenia",
-  AW: "Aruba",
-  AU: "Australia",
-  AT: "Austria",
-  AZ: "Azerbaijan",
-  BS: "Bahamas (the)",
-  BH: "Bahrain",
-  BD: "Bangladesh",
-  BB: "Barbados",
-  BY: "Belarus",
-  BE: "Belgium",
-  BZ: "Belize",
-  BJ: "Benin",
-  BM: "Bermuda",
-  BT: "Bhutan",
-  BO: "Bolivia (Plurinational State of)",
-  BQ: "Bonaire, Sint Eustatius and Saba",
-  BA: "Bosnia and Herzegovina",
-  BW: "Botswana",
-  BV: "Bouvet Island",
-  BR: "Brazil",
-  IO: "British Indian Ocean Territory (the)",
-  BN: "Brunei Darussalam",
-  BG: "Bulgaria",
-  BF: "Burkina Faso",
-  BI: "Burundi",
-  CV: "Cabo Verde",
-  KH: "Cambodia",
-  CM: "Cameroon",
-  CA: "Canada",
-  KY: "Cayman Islands (the)",
-  CF: "Central African Republic (the)",
-  TD: "Chad",
-  CL: "Chile",
-  CN: "China",
-  CX: "Christmas Island",
-  CC: "Cocos (Keeling) Islands (the)",
-  CO: "Colombia",
-  KM: "Comoros (the)",
-  CD: "Congo (the Democratic Republic of the)",
-  CG: "Congo (the)",
-  CK: "Cook Islands (the)",
-  CR: "Costa Rica",
-  HR: "Croatia",
-  CU: "Cuba",
-  CW: "Curaçao",
-  CY: "Cyprus",
-  CZ: "Czechia",
-  CI: "Côte d'Ivoire",
-  DK: "Denmark",
-  DJ: "Djibouti",
-  DM: "Dominica",
-  DO: "Dominican Republic (the)",
-  EC: "Ecuador",
-  EG: "Egypt",
-  SV: "El Salvador",
-  GQ: "Equatorial Guinea",
-  ER: "Eritrea",
-  EE: "Estonia",
-  SZ: "Eswatini",
-  ET: "Ethiopia",
-  FK: "Falkland Islands (the) [Malvinas]",
-  FO: "Faroe Islands (the)",
-  FJ: "Fiji",
-  FI: "Finland",
-  FR: "France",
-  GF: "French Guiana",
-  PF: "French Polynesia",
-  TF: "French Southern Territories (the)",
-  GA: "Gabon",
-  GM: "Gambia (the)",
-  GE: "Georgia",
-  DE: "Germany",
-  GH: "Ghana",
-  GI: "Gibraltar",
-  GR: "Greece",
-  GL: "Greenland",
-  GD: "Grenada",
-  GP: "Guadeloupe",
-  GU: "Guam",
-  GT: "Guatemala",
-  GG: "Guernsey",
-  GN: "Guinea",
-  GW: "Guinea-Bissau",
-  GY: "Guyana",
-  HT: "Haiti",
-  HM: "Heard Island and McDonald Islands",
-  VA: "Holy See (the)",
-  HN: "Honduras",
-  HK: "Hong Kong",
-  HU: "Hungary",
-  IS: "Iceland",
-  IN: "India",
-  ID: "Indonesia",
-  IR: "Iran (Islamic Republic of)",
-  IQ: "Iraq",
-  IE: "Ireland",
-  IM: "Isle of Man",
-  IL: "Israel",
-  IT: "Italy",
-  JM: "Jamaica",
-  JP: "Japan",
-  JE: "Jersey",
-  JO: "Jordan",
-  KZ: "Kazakhstan",
-  KE: "Kenya",
-  KI: "Kiribati",
-  KP: "Korea (the Democratic People's Republic of)",
-  KR: "Korea (the Republic of)",
-  KW: "Kuwait",
-  KG: "Kyrgyzstan",
-  LA: "Lao People's Democratic Republic (the)",
-  LV: "Latvia",
-  LB: "Lebanon",
-  LS: "Lesotho",
-  LR: "Liberia",
-  LY: "Libya",
-  LI: "Liechtenstein",
-  LT: "Lithuania",
-  LU: "Luxembourg",
-  MO: "Macao",
-  MG: "Madagascar",
-  MW: "Malawi",
-  MY: "Malaysia",
-  MV: "Maldives",
-  ML: "Mali",
-  MT: "Malta",
-  MH: "Marshall Islands (the)",
-  MQ: "Martinique",
-  MR: "Mauritania",
-  MU: "Mauritius",
-  YT: "Mayotte",
-  MX: "Mexico",
-  FM: "Micronesia (Federated States of)",
-  MD: "Moldova (the Republic of)",
-  MC: "Monaco",
-  MN: "Mongolia",
-  ME: "Montenegro",
-  MS: "Montserrat",
-  MA: "Morocco",
-  MZ: "Mozambique",
-  MM: "Myanmar",
-  NA: "Namibia",
-  NR: "Nauru",
-  NP: "Nepal",
-  NL: "Netherlands (the)",
-  NC: "New Caledonia",
-  NZ: "New Zealand",
-  NI: "Nicaragua",
-  NE: "Niger (the)",
-  NG: "Nigeria",
-  NU: "Niue",
-  NF: "Norfolk Island",
-  MP: "Northern Mariana Islands (the)",
-  NO: "Norway",
-  OM: "Oman",
-  PK: "Pakistan",
-  PW: "Palau",
-  PS: "Palestine, State of",
-  PA: "Panama",
-  PG: "Papua New Guinea",
-  PY: "Paraguay",
-  PE: "Peru",
-  PH: "Philippines (the)",
-  PN: "Pitcairn",
-  PL: "Poland",
-  PT: "Portugal",
-  PR: "Puerto Rico",
-  QA: "Qatar",
-  MK: "Republic of North Macedonia",
-  RO: "Romania",
-  RU: "Russian Federation (the)",
-  RW: "Rwanda",
-  RE: "Réunion",
-  BL: "Saint Barthélemy",
-  SH: "Saint Helena, Ascension and Tristan da Cunha",
-  KN: "Saint Kitts and Nevis",
-  LC: "Saint Lucia",
-  MF: "Saint Martin (French part)",
-  PM: "Saint Pierre and Miquelon",
-  VC: "Saint Vincent and the Grenadines",
-  WS: "Samoa",
-  SM: "San Marino",
-  ST: "Sao Tome and Principe",
-  SA: "Saudi Arabia",
-  SN: "Senegal",
-  RS: "Serbia",
-  SC: "Seychelles",
-  SL: "Sierra Leone",
-  SG: "Singapore",
-  SX: "Sint Maarten (Dutch part)",
-  SK: "Slovakia",
-  SI: "Slovenia",
-  SB: "Solomon Islands",
-  SO: "Somalia",
-  ZA: "South Africa",
-  GS: "South Georgia and the South Sandwich Islands",
-  SS: "South Sudan",
-  ES: "Spain",
-  LK: "Sri Lanka",
-  SD: "Sudan (the)",
-  SR: "Suriname",
-  SJ: "Svalbard and Jan Mayen",
-  SE: "Sweden",
-  CH: "Switzerland",
-  SY: "Syrian Arab Republic",
-  TW: "Taiwan",
-  TJ: "Tajikistan",
-  TZ: "Tanzania, United Republic of",
-  TH: "Thailand",
-  TL: "Timor-Leste",
-  TG: "Togo",
-  TK: "Tokelau",
-  TO: "Tonga",
-  TT: "Trinidad and Tobago",
-  TN: "Tunisia",
-  TR: "Turkey",
-  TM: "Turkmenistan",
-  TC: "Turks and Caicos Islands (the)",
-  TV: "Tuvalu",
-  UG: "Uganda",
-  UA: "Ukraine",
-  AE: "United Arab Emirates (the)",
-  GB: "United Kingdom of Great Britain and Northern Ireland (the)",
-  UM: "United States Minor Outlying Islands (the)",
-  US: "United States of America (the)",
-  UY: "Uruguay",
-  UZ: "Uzbekistan",
-  VU: "Vanuatu",
-  VE: "Venezuela (Bolivarian Republic of)",
-  VN: "Viet Nam",
-  VG: "Virgin Islands (British)",
-  VI: "Virgin Islands (U.S.)",
-  WF: "Wallis and Futuna",
-  EH: "Western Sahara",
-  YE: "Yemen",
-  ZM: "Zambia",
-  ZW: "Zimbabwe",
-  AX: "Åland Islands",
-};
+  auto: "Automatic",
+  af: "Afrikaans",
+  sq: "Albanian",
+  am: "Amharic",
+  ar: "Arabic",
+  hy: "Armenian",
+  az: "Azerbaijani",
+  eu: "Basque",
+  be: "Belarusian",
+  bn: "Bengali",
+  bs: "Bosnian",
+  bg: "Bulgarian",
+  ca: "Catalan",
+  ceb: "Cebuano",
+  ny: "Chichewa",
+  "zh-CN": "Chinese (Simplified)",
+  "zh-TW": "Chinese (Traditional)",
+  co: "Corsican",
+  hr: "Croatian",
+  cs: "Czech",
+  da: "Danish",
+  nl: "Dutch",
+  en: "English",
+  eo: "Esperanto",
+  et: "Estonian",
+  tl: "Filipino",
+  fi: "Finnish",
+  fr: "French",
+  fy: "Frisian",
+  gl: "Galician",
+  ka: "Georgian",
+  de: "German",
+  el: "Greek",
+  gu: "Gujarati",
+  ht: "Haitian Creole",
+  ha: "Hausa",
+  haw: "Hawaiian",
+  he: "Hebrew",
+  iw: "Hebrew",
+  hi: "Hindi",
+  hmn: "Hmong",
+  hu: "Hungarian",
+  is: "Icelandic",
+  ig: "Igbo",
+  id: "Indonesian",
+  ga: "Irish",
+  it: "Italian",
+  ja: "Japanese",
+  jw: "Javanese",
+  kn: "Kannada",
+  kk: "Kazakh",
+  km: "Khmer",
+  ko: "Korean",
+  ku: "Kurdish (Kurmanji)",
+  ky: "Kyrgyz",
+  lo: "Lao",
+  la: "Latin",
+  lv: "Latvian",
+  lt: "Lithuanian",
+  lb: "Luxembourgish",
+  mk: "Macedonian",
+  mg: "Malagasy",
+  ms: "Malay",
+  ml: "Malayalam",
+  mt: "Maltese",
+  mi: "Maori",
+  mr: "Marathi",
+  mn: "Mongolian",
+  my: "Myanmar (Burmese)",
+  ne: "Nepali",
+  no: "Norwegian",
+  ps: "Pashto",
+  fa: "Persian",
+  pl: "Polish",
+  pt: "Portuguese",
+  pa: "Punjabi",
+  ro: "Romanian",
+  ru: "Russian",
+  sm: "Samoan",
+  gd: "Scots Gaelic",
+  sr: "Serbian",
+  st: "Sesotho",
+  sn: "Shona",
+  sd: "Sindhi",
+  si: "Sinhala",
+  sk: "Slovak",
+  sl: "Slovenian",
+  so: "Somali",
+  es: "Spanish",
+  su: "Sundanese",
+  sw: "Swahili",
+  sv: "Swedish",
+  tg: "Tajik",
+  ta: "Tamil",
+  te: "Telugu",
+  th: "Thai",
+  tr: "Turkish",
+  uk: "Ukrainian",
+  ur: "Urdu",
+  uz: "Uzbek",
+  vi: "Vietnamese",
+  cy: "Welsh",
+  xh: "Xhosa",
+  yi: "Yiddish",
+  yo: "Yoruba",
+  zu: "Zulu",
+};;
 
 function loadCountry(){
   Object.entries(countryListAlpha2).forEach(([key,value]) => {
        var option = document.createElement("option");
-       key.toLowerCase() === 'vn' ? option.selected ="selected" : value;
+       key.toLowerCase() === 'vi' ? option.selected ="selected" : value;
        option.value = key.toLowerCase();
        option.text = value;
        select.add(option);
@@ -298,7 +161,6 @@ async function getSelectionText(){
     await context.sync(); 
     return paragraph.text;
   });
-  // console.log(result);
   return result;
 }
 async function checkSelectedText(){
@@ -306,11 +168,61 @@ async function checkSelectedText(){
   if(text ===''){
     console.log('empty')
   }else{
-    console.log(text); 
+    return text;
   }
 }
 
 
+async function autoDetect(textSlection){
+  const encodedParams = new URLSearchParams();
+  encodedParams.append("q", textSlection);
+
+  const options = {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "Accept-Encoding": "application/gzip",
+      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+      "X-RapidAPI-Key": API_KEY,
+    },
+    body: encodedParams,
+  };
+
+  const objectDectect= fetch("https://google-translate1.p.rapidapi.com/language/translate/v2/detect", options)
+  .then((result) => result.json()).then((result) =>{return result.data.detections[0][0].language} );
+ return objectDectect;
+}
 
 
 
+async function translate(){
+  const detectSource = await autoDetect();
+  let optionTarget = select.value;
+  let textSelection = await checkSelectedText();
+  const encodedParams = new URLSearchParams();
+  encodedParams.append("q", textSelection);
+  encodedParams.append("target", optionTarget);
+  encodedParams.append("source", detectSource);
+  const options = {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "Accept-Encoding": "application/gzip",
+      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
+      "X-RapidAPI-Key": API_KEY,
+    },
+    body: encodedParams,
+  };
+
+   fetch("https://google-translate1.p.rapidapi.com/language/translate/v2", options)
+    .then((response) => response.json())
+    .then((response) => {
+      var result = response.data.translations[0].translatedText;
+      textArea.innerHTML = result;
+    })
+    .catch((err) => console.error(err));
+}
+
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({ pageLanguage: "en" }, "vi");
+}
