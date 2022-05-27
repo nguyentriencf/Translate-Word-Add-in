@@ -9,9 +9,10 @@
 // const translate = require("@vitalets/google-translate-api");
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
-    document.getElementById("insert").onclick = insert
+    document.getElementById("insert").onclick = writeData;
     Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, async (eventArgs) => {
-      // await translate();
+      console.log(eventArgs);
+      await translate();
     });
   }
 });
@@ -19,20 +20,14 @@ const API_KEY = "88f64a526emshd85f96f8c98bebap189861jsn5dac74a369a3";
 // const API_KEY = "93d67f0abamsh53f0dd7a562f07cp12fe30jsnb6ce5425e9ec";
 const select = document.getElementById("selectCountry");
 const textArea = document.getElementById("textTranSlated");
- async function insert() {
-  return Word.run(async (context) => {
-    /**
-     * Insert your Word code here
-     */
-    // insert a paragraph at the end of the document.
-    
-    const paragraph = context.document.body.insertParagraph(textArea.value, Word.InsertLocation.start);
-    // change the paragraph color to blue.
-    paragraph.font.color = "blue";
-    await context.sync();
+
+function writeData(){
+  Office.context.document.setSelectedDataAsync(textArea.value, function (asyncResult) {
+    if (asyncResult.status == Office.AsyncResultStatus.Failed) {
+      write(asyncResult.error.message);
+    }
   });
 }
-
 
 const countryListAlpha2 = {
   auto: "Automatic",
