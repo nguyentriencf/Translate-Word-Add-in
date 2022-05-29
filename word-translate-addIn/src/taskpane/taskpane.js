@@ -11,11 +11,10 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
     document.getElementById("insert").onclick = writeData;
     Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, async (eventArgs) => {
-      // await translates();
+      await translates();
     });
   }
 });
-// const API_KEY = '9ac32b0592msh11de28e6258e1cap14cf7fjsn332299a82fc1';
 const API_KEY = "b0ac586fa2mshf0687d63e8ec41cp13f635jsn560a4554a34a";
 const select = document.getElementById("selectCountry");
 const textArea = document.getElementById("textTranSlated");
@@ -148,15 +147,6 @@ function loadCountry(){
 }
 loadCountry();
 
-async function getSelectionText(){
-   const result=  await Word.run(async (context)=>{
-    let paragraph = context.document.getSelection();
-    paragraph.load('text');
-    await context.sync(); 
-    return paragraph.text;
-  });
-  return result;
-}
 async function checkSelectedText(){
   var result =""
   let text = await getSelectionText();
@@ -164,9 +154,6 @@ async function checkSelectedText(){
  return result;
 
 }
-
-
-
 
 async function autoDetect(textSlection){
   const encodedParams = new URLSearchParams();
@@ -188,41 +175,6 @@ async function autoDetect(textSlection){
  return objectDectect;
 }
 
-
-
-async function translate(){
-  const detectSource = await autoDetect();
-  let optionTarget = select.value;
-  let textSelection = await checkSelectedText();
-  const encodedParams = new URLSearchParams();
-  encodedParams.append("q", textSelection);
-  encodedParams.append("target", optionTarget);
-  encodedParams.append("source", detectSource);
-  const options = {
-    method: "POST",
-    headers: {
-      "content-type": "application/x-www-form-urlencoded",
-      "Accept-Encoding": "application/gzip",
-      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
-      "X-RapidAPI-Key": API_KEY,
-    },
-    body: encodedParams,
-  };
-
-   fetch("https://google-translate1.p.rapidapi.com/language/translate/v2", options)
-    .then((response) => response.json())
-    .then((response) => {
-      var result = response.data.translations[0].translatedText;
-      textArea.innerHTML = result;
-    })
-    .catch((err) => console.error(err));
-}
-
-// function googleTranslateElementInit() {
-//   new google.translate.TranslateElement({ pageLanguage: "en" }, "vi");
-// }
-
- 
 async function translates(){
  let text = await checkSelectedText();
  if(text!==""){
