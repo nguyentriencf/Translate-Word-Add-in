@@ -9,21 +9,21 @@
 // const translate = require("@vitalets/google-translate-api");
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
-    document.getElementById("insert").onclick =  writeData();
+    document.getElementById("insert").onclick = writeData;
     Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, async (eventArgs) => {
-      // await translates();
+      await translates();
     });
   }
 });
 // const API_KEY = '9ac32b0592msh11de28e6258e1cap14cf7fjsn332299a82fc1';
-// const API_KEY = "93d67f0abamsh53f0dd7a562f07cp12fe30jsnb6ce5425e9ec";
+const API_KEY = "b0ac586fa2mshf0687d63e8ec41cp13f635jsn560a4554a34a";
 const select = document.getElementById("selectCountry");
 const textArea = document.getElementById("textTranSlated");
 
 function writeData(){
   Office.context.document.setSelectedDataAsync(textArea.value, function (asyncResult) {
     if (asyncResult.status == Office.AsyncResultStatus.Failed) {
-      write(asyncResult.error.message);
+      console.log(asyncResult.error.message);
     }
   });
 }
@@ -158,14 +158,11 @@ async function getSelectionText(){
   return result;
 }
 async function checkSelectedText(){
+  var result =""
   let text = await getSelectionText();
-  console.log(text);
-  // if(text ===''){
-  //   console.log('empty')
-  // }else{
-  //   console.log(text);
-  //   return text;
-  // }
+  text===""?console.log('empty'): result = text;
+ return result;
+
 }
 
 
@@ -227,34 +224,27 @@ async function translate(){
 
  
 async function translates(){
- let text = await readData();
+ let text = await checkSelectedText();
+ console.log(text);
  const options = {
    method: "POST",
    headers: {
      "content-type": "application/json",
      "X-RapidAPI-Host": "microsoft-translator-text.p.rapidapi.com",
-     "X-RapidAPI-Key": "9ac32b0592msh11de28e6258e1cap14cf7fjsn332299a82fc1",
+     "X-RapidAPI-Key": API_KEY,
    },
-   body: '[{"Text":"hello"}]',
+   body: '[{"Text":"'+text+'"}]',
  };
 
  fetch(
-   "https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=en&api-version=3.0&profanityAction=NoAction&textType=plain",
+   `https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=${select.value}&api-version=3.0&profanityAction=NoAction&textType=plain`,
    options
  )
    .then((response) => response.json())
    .then((response) => console.log(response))
    .catch((err) => console.error(err));
 }
-translates();
- 
- function readData(){
- Office.context.document.getSelectedDataAsync(Office.CoercionType.Text, function (asyncResult) {
-   if (asyncResult.status == Office.AsyncResultStatus.Failed) {
-     console.log("Action failed. Error: " +  asyncResult.error.message);
-   } else {
-     return  asyncResult.value;
-   }
- });
 
-}
+ 
+
+
