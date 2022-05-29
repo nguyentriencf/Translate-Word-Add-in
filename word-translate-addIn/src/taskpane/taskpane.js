@@ -225,7 +225,7 @@ async function translate(){
  
 async function translates(){
  let text = await checkSelectedText();
- console.log(text);
+ 
  const options = {
    method: "POST",
    headers: {
@@ -241,7 +241,13 @@ async function translates(){
    options
  )
    .then((response) => response.json())
-   .then((response) => console.log(response))
+   .then((response) => {
+console.log(response)
+     var textTranSlated = response[0].translations[0].text;
+     
+     textArea.innerHTML = textTranSlated;
+
+   })
    .catch((err) => console.error(err));
 }
 
