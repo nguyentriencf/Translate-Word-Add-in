@@ -11,7 +11,7 @@ Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
     document.getElementById("insert").onclick = writeData;
     Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, async (eventArgs) => {
-      await translates();
+      // await translates();
     });
   }
 });
@@ -225,30 +225,30 @@ async function translate(){
  
 async function translates(){
  let text = await checkSelectedText();
- 
- const options = {
-   method: "POST",
-   headers: {
-     "content-type": "application/json",
-     "X-RapidAPI-Host": "microsoft-translator-text.p.rapidapi.com",
-     "X-RapidAPI-Key": API_KEY,
-   },
-   body: '[{"Text":"'+text+'"}]',
- };
+ if(text!==""){
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "X-RapidAPI-Host": "microsoft-translator-text.p.rapidapi.com",
+        "X-RapidAPI-Key": API_KEY,
+      },
+      body: '[{"Text":"' + text + '"}]',
+    };
 
- fetch(
-   `https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=${select.value}&api-version=3.0&profanityAction=NoAction&textType=plain`,
-   options
- )
-   .then((response) => response.json())
-   .then((response) => {
-console.log(response)
-     var textTranSlated = response[0].translations[0].text;
-     
-     textArea.innerHTML = textTranSlated;
+    fetch(
+      `https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=${select.value}&api-version=3.0&profanityAction=NoAction&textType=plain`,
+      options
+    )
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        var textTranSlated = response[0].translations[0].text;
 
-   })
-   .catch((err) => console.error(err));
+        textArea.innerHTML = textTranSlated;
+      })
+      .catch((err) => console.error(err));
+ }
 }
 
  
