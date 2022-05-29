@@ -6,7 +6,6 @@
 /* global document, Office, Word */
 // npm cache --force clean  
 // npm install --force
-// const translate = require("@vitalets/google-translate-api");
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
     document.getElementById("insert").onclick = writeData;
@@ -15,6 +14,7 @@ Office.onReady((info) => {
     });
   }
 });
+
 const API_KEY = "b0ac586fa2mshf0687d63e8ec41cp13f635jsn560a4554a34a";
 const select = document.getElementById("selectCountry");
 const textArea = document.getElementById("textTranSlated");
@@ -147,6 +147,15 @@ function loadCountry(){
 }
 loadCountry();
 
+async function getSelectionText(){
+   const result=  await Word.run(async (context)=>{
+    let paragraph = context.document.getSelection();
+    paragraph.load('text');
+    await context.sync(); 
+    return paragraph.text;
+  });
+  return result;
+}
 async function checkSelectedText(){
   var result =""
   let text = await getSelectionText();
@@ -155,26 +164,8 @@ async function checkSelectedText(){
 
 }
 
-async function autoDetect(textSlection){
-  const encodedParams = new URLSearchParams();
-  encodedParams.append("q", textSlection);
 
-  const options = {
-    method: "POST",
-    headers: {
-      "content-type": "application/x-www-form-urlencoded",
-      "Accept-Encoding": "application/gzip",
-      "X-RapidAPI-Host": "google-translate1.p.rapidapi.com",
-      "X-RapidAPI-Key": API_KEY,
-    },
-    body: encodedParams,
-  };
-
-  const objectDectect= fetch("https://google-translate1.p.rapidapi.com/language/translate/v2/detect", options)
-  .then((result) => result.json()).then((result) =>{return result.data.detections[0][0].language} );
- return objectDectect;
-}
-
+ 
 async function translates(){
  let text = await checkSelectedText();
  if(text!==""){
