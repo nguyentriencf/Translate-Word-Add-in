@@ -6,11 +6,21 @@
 /* global document, Office, Word */
 // npm cache --force clean  
 // npm install --force
+
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
     document.getElementById("insert").onclick = writeData;
     Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, async (eventArgs) => {
+       const checkbox = document.getElementById("vietnamese_K_Ho");
+      checkbox.checked=false;
+        checkVietNameseSelected();
       await translates();
+      checkbox.addEventListener("change", (event) => {
+        console.log("trien");
+        if (event.currentTarget.checked) {
+          translate_K_Ho();
+        }
+      });
     });
   }
 });
@@ -18,6 +28,7 @@ Office.onReady((info) => {
 const API_KEY = "b0ac586fa2mshf0687d63e8ec41cp13f635jsn560a4554a34a";
 const select = document.getElementById("selectCountry");
 const textArea = document.getElementById("textTranSlated");
+const checkBoxK_HO = document.getElementById("k_HO");
 
 function writeData(){
   Office.context.document.setSelectedDataAsync(textArea.value, function (asyncResult) {
@@ -156,44 +167,74 @@ async function getSelectionText(){
   });
   return result;
 }
+
 async function checkSelectedText(){
   var result =""
   let text = await getSelectionText();
   text===""?console.log('empty'): result = text;
  return result;
-
 }
-
-
  
 async function translates(){
  let text = await checkSelectedText();
  if(text!==""){
+const data = [{"Text":text}];
     const options = {
       method: "POST",
       headers: {
         "content-type": "application/json",
         "X-RapidAPI-Host": "microsoft-translator-text.p.rapidapi.com",
-        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Key": API_KEY
       },
-      body: '[{"Text":"' + text + '"}]',
+      body: JSON.stringify(data) 
     };
-
-    fetch(
-      `https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=${select.value}&api-version=3.0&profanityAction=NoAction&textType=plain`,
+    fetch(`https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=${select.value}&api-version=3.0&profanityAction=NoAction&textType=plain`,
       options
     )
       .then((response) => response.json())
       .then((response) => {
         console.log(response);
         var textTranSlated = response[0].translations[0].text;
-
         textArea.innerHTML = textTranSlated;
       })
       .catch((err) => console.error(err));
  }
 }
 
- 
+ async function translate_K_Ho(){
+ const text = textArea.value;
+    const data = {
+      lang2: 1,
+      word_text: text,
+    };
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    };
+    fetch(`https://tudien.dlu.edu.vn/translate/type/?format=json`, options)
+      .then((response) => response.json())
+      .then((response) => {
+        console.log(response)
+        var translateKHo = response.Dest
+        textArea.innerHTML = translateKHo;
+      })
+      .catch((err) => console.error(err));
+}
+
+function checkVietNameseSelected(){
+  if (select.value !== "vi") {
+    checkBoxK_HO.style.display= "none";
+  }else{
+    checkBoxK_HO.style.display="block"
+  }
+}
+
+
+
+
+
 
 
